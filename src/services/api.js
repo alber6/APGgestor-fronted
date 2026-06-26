@@ -1,7 +1,7 @@
 import axios from 'axios';
 // el "túnel" que conecta React con Node.js
 const API = axios.create({
-  baseURL: 'https://apggestor-backend.onrender.com',
+  baseURL: 'https://apggestor-backend.onrender.com/api',
 });
 
 // Función para hacer el Login (Envía nombre y password)
