@@ -1,0 +1,476 @@
+/* ==========================================================================
+   DESIGN SYSTEM & CORE RESET 
+   ========================================================================== */
+*, *::before, *::after {
+  box-sizing: border-box; /* 🌟 CLAVE: Evita que el padding rompa el ancho de pantalla */
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --primary-color: #3b82f6;
+  --primary-hover: #1d4ed8;
+  --neutral-dark: #1e293b;
+  --neutral-body: #475569;
+  --neutral-light: #f8fafc;
+  --card-bg: #ffffff;
+  --border-color: #cbd5e1;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --transition: all 0.2s ease-in-out;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--neutral-light);
+  color: var(--neutral-body);
+  overflow-x: hidden; /* 🔥 ESCUDO: Bloquea cualquier intento de scroll horizontal */
+}
+
+/* ==========================================================================
+  2. LAYOUT ESTRUCTURAL
+   ========================================================================== */
+.layout-contenedor {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.barra-lateral {
+  width: 260px;
+  background-color: #0f172a;
+  color: white;
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  flex-shrink: 0;
+}
+
+.logo-empresa {
+  font-size: 22px;
+  font-weight: 800;
+  padding-left: 8px;
+  letter-spacing: 0.5px;
+}
+
+.menu-navegacion {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.enlace-menu {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  color: #94a3b8;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+  border-radius: var(--radius-md);
+  transition: var(--transition);
+}
+
+.enlace-menu:hover {
+  background-color: #1e293b;
+  color: white;
+  transform: translateX(4px);
+}
+
+.contenido-principal {
+  flex-grow: 1;
+  padding: 24px;
+  overflow-y: auto;
+  max-height: 100vh;
+  width: 100%; /* Garantiza que se adapte al espacio restante */
+}
+
+/* ==========================================================================
+   🔐 6. ESTILOS EXCLUSIVOS PARA PANTALLA DE LOGIN
+   ========================================================================== */
+.vista-login-pantalla-completa {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100vw;
+  background-color: #0f172a; /* Mismo azul noche que la barra lateral para dar identidad corporativa */
+  padding: 20px;
+  box-sizing: border-box;
+  position: fixed; /* Asegura que cubra todo si el layout se queda por detrás */
+  top: 0;
+  left: 0;
+  z-index: 9999;
+}
+
+/* Modificador para que la tarjeta de formulario no ocupe todo el ancho en PC */
+.login-compacto {
+  width: 100%;
+  max-width: 400px;
+  animation: fadeInLogin 0.3s ease-in-out;
+}
+
+.login-titulo {
+  color: var(--neutral-dark);
+  font-size: 24px;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+/* Animación sutil de entrada para sorprender al tribunal */
+@keyframes fadeInLogin {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================================================
+   🖥️ 3. COMPONENTES DE VISTA (Dashboards y Listados)
+   ========================================================================== */
+.vista-dashboard, .vista-clientes {
+  padding: 15px;
+}
+
+.subtitulo-dashboard {
+  color: #64748b;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+.contenedor-buscador {
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.input-buscador {
+  width: 100%;
+  padding: 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  font-size: 14px;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+}
+
+.input-buscador:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+/* GRIDS INTELIGENTES */
+.contenedor-listado-obras, .contenedor-lista-clientes {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); /* Optimizado para evitar desbordes */
+}
+
+.mensaje-vacio {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: #64748b;
+  padding: 20px;
+}
+
+
+/* Cabecera del Dashboard del Operario */
+.header-dashboard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.header-text-block {
+  flex-grow: 1;
+}
+
+.subtitulo-dashboard {
+  color: #64748b;
+  font-size: 14px;
+}
+
+/* Botón de Logout (Rojo) */
+.boton-logout {
+  max-width: 140px;
+  padding: 10px;
+  background-color: #ef4444;
+  margin-top: 0 !important;
+  border-radius: 5px;
+}
+
+.boton-logout:hover {
+  background-color: #dc2626;
+}
+
+/* Ajustes de la tarjeta e historial */
+.tarjeta-no-clickable {
+  cursor: default;
+}
+
+.tarjeta-titulo-instalacion {
+  color: var(--primary-color);
+  font-size: 18px;
+}
+
+.enlace-telefono {
+  color: var(--primary-color);
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.bloque-historial-notas {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+/* Formulario interno de las tarjetas */
+.campo-selector-estado {
+  margin-top: 12px;
+}
+
+.label-pequena {
+  font-size: 13px;
+}
+
+.select-estado {
+  padding: 8px;
+  font-weight: bold;
+}
+
+/* Contenedor del envío de reportes en vivo */
+.contenedor-input-reporte {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.input-reporte-texto {
+  padding: 8px;
+  font-size: 13px;
+}
+
+.boton-enviar-reporte {
+  width: auto;
+  padding: 0 16px;
+  margin-top: 0 !important;
+  font-size: 13px;
+}
+/* TARJETAS COMUNES (Mantenimiento Simplificado) */
+.tarjeta-obra-hibrida, .tarjeta-cliente {
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: var(--transition);
+}
+
+.tarjeta-obra-hibrida:hover, .tarjeta-cliente:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  border-color: var(--primary-color);
+  cursor: pointer;
+}
+
+.tarjeta-obra-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+}
+
+.id-obra {
+  font-weight: bold;
+  color: var(--primary-color);
+  background: #eff6ff;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.tarjeta-obra-body h4, .tarjeta-cliente h3 {
+  margin: 0 0 8px 0;
+  color: var(--neutral-dark);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.tarjeta-cliente h3 {
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 8px;
+  text-transform: capitalize;
+}
+
+.tarjeta-obra-body p, .tarjeta-cliente p {
+  margin: 6px 0;
+  font-size: 14px;
+}
+
+.precio-obra {
+  font-size: 15px !important;
+  color: var(--neutral-dark) !important;
+  font-weight: bold;
+  margin-top: 8px !important;
+}
+
+/* BADGES RESUMIDOS */
+.status-badge, .badge-propiedad {
+  font-size: 12px;
+  font-weight: bold;
+  padding: 4px 12px;
+  border-radius: 50px;
+  text-transform: uppercase;
+}
+
+.badge-propiedad {
+  border-radius: 4px;
+  background-color: #f1f5f9;
+  color: #334155;
+  display: inline-block;
+}
+
+.status-badge.pendiente { background-color: #fef3c7; color: #d97706; }
+.status-badge.en-proceso { background-color: #e0f2fe; color: #0369a1; }
+.status-badge.finalizado { background-color: #d1fae5; color: #047857; }
+
+.bloque-notas-interno {
+  margin-top: 12px;
+  padding: 8px 12px;
+  background-color: #fef08a;
+  border-left: 4px solid #facc15;
+  border-radius: 4px;
+  font-size: 13px;
+  color: #713f12;
+}
+
+/* ==========================================================================
+   📝 4. FORMULARIOS UNIFICADOS (NewCustomer y NewJob)
+   ========================================================================== */
+.vista-formulario {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.tarjeta-formulario-blanca {
+  background: var(--card-bg);
+  padding: 24px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  border: 1px solid #e2e8f0;
+}
+
+.campo-formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+
+.campo-formulario label {
+  font-size: 14px;
+  font-weight: bold;
+  color: var(--neutral-dark);
+}
+
+.campo-formulario input, .campo-formulario select, .campo-formulario textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  color: var(--neutral-dark);
+  background-color: var(--card-bg);
+  transition: var(--transition);
+}
+
+.campo-formulario input:focus, .campo-formulario select:focus, .campo-formulario textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.campo-formulario input:disabled {
+  background-color: #f1f5f9 !important;
+  color: #64748b !important;
+  border-color: #e2e8f0 !important;
+  cursor: not-allowed;
+}
+
+.texto-ayuda-formulario, .subtitulo-formulario {
+  color: #64748b;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.subtitulo-formulario {
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.boton-formulario {
+  width: 100%;
+  padding: 14px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: var(--transition);
+}
+
+.boton-formulario:hover { background-color: var(--primary-hover); transform: translateY(-1px); }
+.boton-formulario:active { transform: translateY(0); }
+
+.alerta-sistema {
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  color: white;
+  border-radius: var(--radius-md);
+  font-weight: bold;
+  font-size: 14px;
+  box-shadow: var(--shadow-sm);
+}
+.alerta-sistema.exito { background-color: #22c55e; }
+.alerta-sistema.error { background-color: #ef4444; }
+
+/* ==========================================================================
+   📱 5. MEDIA QUERIES (Adaptabilidad Absoluta Estricta)
+   ========================================================================== */
+@media (max-width: 768px) {
+  .layout-contenedor { flex-direction: column; }
+  .barra-lateral { width: 100%; padding: 16px; gap: 15px; }
+  .logo-empresa { text-align: center; font-size: 20px; }
+  .menu-navegacion { flex-direction: row; justify-content: space-around; flex-wrap: wrap; gap: 4px; }
+  .enlace-menu { padding: 8px 12px; font-size: 13px; }
+  .enlace-menu:hover { transform: none; }
+  .contenido-principal { padding: 16px; max-height: none; }
+}
+
+@media (max-width: 480px) {
+  .contenedor-listado-obras, .contenedor-lista-clientes {
+    grid-template-columns: 1fr; /* Fuerza una sola tarjeta por fila sin desbordar */
+  }
+}
