@@ -14,23 +14,42 @@ API.interceptors.request.use((config) => {
   return config;
 }, (error) => Promise.reject(error));
 
-// Función para hacer el Login (Envía nombre y password)
+// ----------------------------------------------------
+// 🔐 AUTENTICACIÓN
+// ----------------------------------------------------
 export const loginRequest = (credentials) => API.post('/auth/login', credentials);
-// Función para registrar un cliente nuevo
-export const createCustomerRequest = (customerData) => API.post('/customers', customerData);
-// Función para registrar una nueva orden de trabajo en la base de datos
-export const createJobRequest = (jobData) => API.post('/jobs', jobData);
 
+// ----------------------------------------------------
+// 📋 OBRAS / TRABAJOS (JOBS) - CRUD COMPLETO
+// ----------------------------------------------------
 export const getJobs = () => API.get('/jobs');
-export const getOperators = () => API.get('/operators');
-export const getCustomers = () => API.get('/customers');
-export const createCustomer = (customerData) => API.post('/customers', customerData);
-export const updateJobStatus = (id, statusData) => API.patch(`/jobs/${id}`, statusData);
+export const createJob = (jobData) => API.post('/jobs', jobData);
+export const createJobRequest = createJob;
 export const updateJob = (id, jobData) => API.patch(`/jobs/${id}`, jobData);
+export const updateJobStatus = (id, statusData) => API.patch(`/jobs/${id}`, statusData);
+export const deleteJob = (id) => API.delete(`/jobs/${id}`);
 
-// Peticiones específicas para la operativa ampliada
+// Peticiones de detalle de obra (alertas, documentos, partidas)
 export const addMaterialAlert = (id, texto) => API.patch(`/jobs/${id}`, { alertaMaterialTexto: texto });
 export const addJobDocument = (id, nuevoDocumento) => API.patch(`/jobs/${id}`, { nuevoDocumento });
 export const addJobPartida = (id, nuevaPartida) => API.patch(`/jobs/${id}`, { nuevaPartida });
 
-export default API;
+// ----------------------------------------------------
+// 👥 CLIENTES (CUSTOMERS) - CRUD COMPLETO
+// ----------------------------------------------------
+export const getCustomers = () => API.get('/customers');
+export const createCustomer = (customerData) => API.post('/customers', customerData);
+export const createCustomerRequest = createCustomer;
+export const updateCustomer = (id, customerData) => API.put(`/customers/${id}`, customerData);
+export const deleteCustomer = (id) => API.delete(`/customers/${id}`);
+
+// ----------------------------------------------------
+// 👷 OPERARIOS (OPERATORS) - CRUD COMPLETO
+// ----------------------------------------------------
+export const getOperators = () => API.get('/operators');
+export const createOperator = (operatorData) => API.post('/operators', operatorData);
+export const updateOperator = (id, operatorData) => API.put(`/operators/${id}`, operatorData);
+export const deleteOperator = (id) => API.delete(`/operators/${id}`);
+
+export default API;
+
