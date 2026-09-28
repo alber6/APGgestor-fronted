@@ -62,13 +62,12 @@ const OfficeDashboard = () => {
     tipo_vivienda: 'Chalet'
   });
 
-  // Modal Operario (Creación / Edición)
+  // Modal Operario / Usuario (Creación / Edición)
   const [modalOperario, setModalOperario] = useState({ abierto: false, modo: 'crear', datos: null });
   const [formOperario, setFormOperario] = useState({
     nombre: '',
-    especialidad: 'Electricidad General',
     password: '',
-    disponibilidad: true
+    rol: 'operario'
   });
 
   // Subida de PDF y Partidas dentro del detalle de obra
@@ -259,19 +258,18 @@ const OfficeDashboard = () => {
   };
 
   // =========================================================================
-  // 👷 GESTIÓN DE OPERARIOS (OPERATORS)
+  // 👷 GESTIÓN DE OPERARIOS / USUARIOS (USERS)
   // =========================================================================
   const abrirModalCrearOperario = () => {
-    setFormOperario({ nombre: '', especialidad: 'Electricidad General', password: '1234', disponibilidad: true });
+    setFormOperario({ nombre: '', password: '1234', rol: 'operario' });
     setModalOperario({ abierto: true, modo: 'crear', datos: null });
   };
 
   const abrirModalEditarOperario = (op) => {
     setFormOperario({
       nombre: op.nombre || '',
-      especialidad: op.especialidad || 'Electricidad General',
       password: '',
-      disponibilidad: op.disponibilidad !== undefined ? op.disponibilidad : true
+      rol: op.rol || 'operario'
     });
     setModalOperario({ abierto: true, modo: 'editar', datos: op });
   };
@@ -281,8 +279,9 @@ const OfficeDashboard = () => {
     try {
       if (modalOperario.modo === 'crear') {
         const res = await createOperator(formOperario);
-        setOperarios([...operarios, res.data.operator || res.data]);
-        alert("✅ Operario y clave de acceso creados correctamente.");
+        const nuevoOp = res.data.user || res.data;
+        setOperarios([...operarios, nuevoOp]);
+        alert("✅ Usuario de operario creado correctamente en MongoDB.");
       } else {
         const res = await updateOperator(modalOperario.datos._id, formOperario);
         setOperarios(operarios.map(o => o._id === modalOperario.datos._id ? res.data : o));
@@ -295,11 +294,11 @@ const OfficeDashboard = () => {
   };
 
   const handleEliminarOperario = async (id, nombre) => {
-    if (!window.confirm(`⚠️ ¿Estás seguro de eliminar al trabajador "${nombre}" y revocar sus credenciales?`)) return;
+    if (!window.confirm(`⚠️ ¿Estás seguro de eliminar al operario "${nombre}" de la base de datos?`)) return;
     try {
       await deleteOperator(id);
       setOperarios(operarios.filter(o => o._id !== id));
-      alert("🗑️ Operario dado de baja con éxito.");
+      alert("🗑️ Operario eliminado con éxito.");
     } catch (err) {
       alert("❌ Error al eliminar operario.");
     }
@@ -323,7 +322,7 @@ const OfficeDashboard = () => {
 
   const operariosFiltrados = operarios.filter(o =>
     o.nombre?.toLowerCase().includes(term) ||
-    o.especialidad?.toLowerCase().includes(term)
+    o.rol?.toLowerCase().includes(term)
   );
 
   const todasAlertasMaterial = trabajos.flatMap(t => 
@@ -555,14 +554,13 @@ const OfficeDashboard = () => {
                 <div key={op._id} className="tarjeta-operario">
                   <div>
                     <div className="tarjeta-operario-header">
-                      <span className="id-obra">Operario #{op.id_operario}</span>
-                      <span className={op.disponibilidad ? 'badge-disponible' : 'badge-ocupado'}>
-                        {op.disponibilidad ? '🟢 Disponible' : '🟡 En Obra'}
+                      <span className="id-obra">ID: {op._id ? op._id.slice(-6) : '---'}</span>
+                      <span className="badge-disponible">
+                        ⚡ {op.rol || 'operario'}
                       </span>
                     </div>
 
                     <h3 style={{ fontSize: '18px', margin: '10px 0 4px 0', color: '#0f172a' }}>{op.nombre}</h3>
-                    <p style={{ fontSize: '14px', color: '#3b82f6', fontWeight: 'bold' }}>⚡ {op.especialidad}</p>
                   </div>
 
                   <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
@@ -570,7 +568,7 @@ const OfficeDashboard = () => {
                       ✏️ Editar Datos / Clave
                     </button>
                     <button onClick={() => handleEliminarOperario(op._id, op.nombre)} className="btn-accion-mini btn-eliminar">
-                      🗑️ Dar de Baja
+                      🗑️ Eliminar
                     </button>
                   </div>
                 </div>
@@ -771,19 +769,16 @@ const OfficeDashboard = () => {
                 required 
               />
 
-              <label>Especialidad Principal:</label>
+              <label>Rol de Usuario:</label>
               <select 
-                value={formOperario.especialidad} 
-                onChange={(e) => setFormOperario({ ...formOperario, especialidad: e.target.value })}
+                value={formOperario.rol} 
+                onChange={(e) => setFormOperario({ ...formOperario, rol: e.target.value })}
               >
-                <option value="Electricidad General">⚡ Electricidad General</option>
-                <option value="Solar">☀️ Placas Solares</option>
-                <option value="Cargadores">🚗 Cargadores de Coche</option>
-                <option value="Domótica">🏠 Domótica</option>
-                <option value="Averías">🚨 Reparación de Averías</option>
+                <option value="operario">👷 Operario</option>
+                <option value="admin">👑 Administrador</option>
               </select>
 
-              <label>Contraseña de Acceso (App Móvil):</label>
+              <label>Contraseña de Acceso (App Móvil / Sistema):</label>
               <input 
                 type="text" 
                 value={formOperario.password} 
@@ -791,15 +786,6 @@ const OfficeDashboard = () => {
                 placeholder={modalOperario.modo === 'crear' ? 'Ej: 1234' : 'Dejar en blanco para no modificar'} 
                 required={modalOperario.modo === 'crear'}
               />
-
-              <label>Estado de Disponibilidad:</label>
-              <select 
-                value={formOperario.disponibilidad ? 'true' : 'false'} 
-                onChange={(e) => setFormOperario({ ...formOperario, disponibilidad: e.target.value === 'true' })}
-              >
-                <option value="true">🟢 Disponible para nuevas obras</option>
-                <option value="false">🟡 Asignado / En Obra</option>
-              </select>
 
               <button type="submit" className="btn-crear-destacado" style={{ width: '100%', justifyContent: 'center', marginTop: '10px' }}>
                 💾 Guardar Operario

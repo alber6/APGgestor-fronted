@@ -2,7 +2,10 @@ import axios from 'axios';
 
 // el "túnel" que conecta React con Node.js
 const API = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'https://apggestor-backend.onrender.com/api',
+  // CAMBIAR CUANDO SE SUBA A PRODUCCION
+  // baseURL: import.meta.env.VITE_API_URL || 'https://apggestor-backend.onrender.com/api',
+  baseURL: 'http://localhost:5000/api',
+
 });
 
 // Interceptor para adjuntar automáticamente el token JWT guardado en localStorage
@@ -44,12 +47,19 @@ export const updateCustomer = (id, customerData) => API.put(`/customers/${id}`, 
 export const deleteCustomer = (id) => API.delete(`/customers/${id}`);
 
 // ----------------------------------------------------
-// 👷 OPERARIOS (OPERATORS) - CRUD COMPLETO
+// 👤 USUARIOS / OPERARIOS (USERS) - CRUD COMPLETO
 // ----------------------------------------------------
-export const getOperators = () => API.get('/operators');
-export const createOperator = (operatorData) => API.post('/operators', operatorData);
-export const updateOperator = (id, operatorData) => API.put(`/operators/${id}`, operatorData);
-export const deleteOperator = (id) => API.delete(`/operators/${id}`);
+export const getUsers = (rol) => API.get('/users' + (rol ? `?rol=${rol}` : ''));
+export const createUser = (userData) => API.post('/users', userData);
+export const updateUser = (id, userData) => API.put(`/users/${id}`, userData);
+export const deleteUser = (id) => API.delete(`/users/${id}`);
+
+// Alias para mantener compatibilidad
+export const getOperators = () => getUsers('operario');
+export const createOperator = (operatorData) => createUser({ ...operatorData, rol: 'operario' });
+export const updateOperator = (id, operatorData) => updateUser(id, operatorData);
+export const deleteOperator = (id) => deleteUser(id);
 
 export default API;
-
+
+

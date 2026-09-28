@@ -118,7 +118,7 @@ return (
         <label>Operario Asignado:</label>
         <select name="operario" value={formData.operario} onChange={handleChange}>
           {operarios.map(op => (
-            <option key={op._id} value={op._id}>{op.nombre} ({op.email})</option>
+            <option key={op._id} value={op._id}>{op.nombre}</option>
           ))}
         </select>
       </div>
