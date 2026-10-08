@@ -36,6 +36,7 @@ export const deleteJob = (id) => API.delete(`/jobs/${id}`);
 export const addMaterialAlert = (id, texto) => API.patch(`/jobs/${id}`, { alertaMaterialTexto: texto });
 export const addJobDocument = (id, nuevoDocumento) => API.patch(`/jobs/${id}`, { nuevoDocumento });
 export const addJobPartida = (id, nuevaPartida) => API.patch(`/jobs/${id}`, { nuevaPartida });
+export const generateJobDocs = (id) => API.post(`/jobs/${id}/generate-docs`, {}, { responseType: 'blob' });
 
 // ----------------------------------------------------
 // 👥 CLIENTES (CUSTOMERS) - CRUD COMPLETO
