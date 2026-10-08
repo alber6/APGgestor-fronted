@@ -3,8 +3,8 @@ import axios from 'axios';
 // el "túnel" que conecta React con Node.js
 const API = axios.create({
   // CAMBIAR CUANDO SE SUBA A PRODUCCION
-  // baseURL: import.meta.env.VITE_API_URL || 'https://apggestor-backend.onrender.com/api',
-  baseURL: 'http://localhost:5000/api',
+  baseURL: import.meta.env.VITE_API_URL || 'https://apggestor-backend.onrender.com/api',
+  // baseURL: 'http://localhost:5000/api',
 
 });
 
