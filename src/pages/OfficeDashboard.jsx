@@ -801,9 +801,16 @@ const OfficeDashboard = () => {
                 onChange={(e) => setFormObra({ ...formObra, cliente: e.target.value })}
               >
                 <option value="">-- Seleccionar Cliente --</option>
-                {clientes.map(c => (
-                  <option key={c._id} value={c._id}>{c.nombre}{c.nif ? ` - ${c.nif}` : ''}</option>
-                ))}
+                {clientes.map(c => {
+                  const ap = (!c.es_empresa && (c.apellido1 || c.apellido2)) ? ` ${c.apellido1 || ''} ${c.apellido2 || ''}`.trimEnd() : '';
+                  const rep = (c.es_empresa && c.representante_nombre) ? ` (Rep: ${c.representante_nombre})` : '';
+                  const ref = c.nombre_referencia ? ` [Ref: ${c.nombre_referencia}]` : '';
+                  return (
+                    <option key={c._id} value={c._id}>
+                      {c.nombre}{ap} - {c.nif || 'Sin NIF'}{rep}{ref}
+                    </option>
+                  );
+                })}
               </select>
 
               <label>Precio Base (€):</label>
