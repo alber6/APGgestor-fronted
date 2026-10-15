@@ -37,6 +37,7 @@ export const addMaterialAlert = (id, texto) => API.patch(`/jobs/${id}`, { alerta
 export const addJobDocument = (id, nuevoDocumento) => API.patch(`/jobs/${id}`, { nuevoDocumento });
 export const addJobPartida = (id, nuevaPartida) => API.patch(`/jobs/${id}`, { nuevaPartida });
 export const generateJobDocs = (id) => API.post(`/jobs/${id}/generate-docs`, {}, { responseType: 'blob' });
+export const generateMemoriaPDF = (id) => API.get(`/jobs/${id}/generate-memoria`, { responseType: 'blob' });
 
 // ----------------------------------------------------
 // 👥 CLIENTES (CUSTOMERS) - CRUD COMPLETO

@@ -12,7 +12,8 @@ import {
   deleteOperator,
   addJobDocument,
   addJobPartida,
-  generateJobDocs
+  generateJobDocs,
+  generateMemoriaPDF
 } from '../services/api';
 import CustomerForm from '../components/CustomerForm';
 import CustomerDetails, { formatearDireccion } from '../components/CustomerDetails';
@@ -44,7 +45,8 @@ const OfficeDashboard = () => {
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
   const [busqueda, setBusqueda] = useState('');
-  const [descargandoDoc, setDescargandoDoc] = useState(null);
+  const [descargandoWord, setDescargandoWord] = useState(null);
+  const [descargandoMemoria, setDescargandoMemoria] = useState(null);
 
   // Modal Detalle / Edición Obra
   const [modalObra, setModalObra] = useState({ abierto: false, datos: null });
@@ -140,26 +142,50 @@ const OfficeDashboard = () => {
   };
 
   // =========================================================================
-  // 📄 DESCARGA AUTOMÁTICA DE DOCUMENTACIÓN (DOCX)
+  // 📄 DESCARGA SOLICITUD (WORD / .docx)
   // =========================================================================
   const handleGenerarDocumentacion = async (jobId, idTrabajo) => {
     try {
-      setDescargandoDoc(jobId);
+      setDescargandoWord(jobId);
       const response = await generateJobDocs(jobId);
-      
-      const url = window.URL.createObjectURL(new Blob([response.data]));
+
+      const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' }));
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', `Documentacion_Obra_${idTrabajo || jobId}.docx`);
+      link.setAttribute('download', `Solicitud_${idTrabajo || jobId}.docx`);
       document.body.appendChild(link);
       link.click();
       link.remove();
       window.URL.revokeObjectURL(url);
-      setDescargandoDoc(null);
+      setDescargandoWord(null);
     } catch (err) {
-      console.error("Error al generar la documentación:", err);
-      alert("❌ Error al generar y descargar la documentación de la obra.");
-      setDescargandoDoc(null);
+      console.error('Error al generar la Solicitud Word:', err);
+      alert('❌ Error al generar y descargar la Solicitud Word de la obra.');
+      setDescargandoWord(null);
+    }
+  };
+
+  // =========================================================================
+  // 📑 DESCARGA MEMORIA TÉCNICA OFICIAL (PDF)
+  // =========================================================================
+  const handleGenerarMemoria = async (jobId, idTrabajo) => {
+    try {
+      setDescargandoMemoria(jobId);
+      const response = await generateMemoriaPDF(jobId);
+
+      const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `Memoria_${idTrabajo || jobId}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+      setDescargandoMemoria(null);
+    } catch (err) {
+      console.error('Error al generar la Memoria PDF:', err);
+      alert('❌ Error al generar y descargar la Memoria Técnica PDF.');
+      setDescargandoMemoria(null);
     }
   };
 
@@ -517,26 +543,68 @@ const OfficeDashboard = () => {
                         </div>
                       </div>
 
-                      {/* BOTÓN DESTACADO: GENERAR DOCUMENTACIÓN */}
-                      <button 
-                        onClick={() => handleGenerarDocumentacion(trabajo._id, trabajo.id_trabajo)}
-                        disabled={descargandoDoc === trabajo._id}
-                        className="boton-formulario"
-                        style={{ 
-                          background: 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)', 
-                          color: '#ffffff',
-                          marginTop: '10px',
-                          padding: '10px',
-                          fontSize: '13px',
-                          fontWeight: 'bold',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          gap: '6px'
-                        }}
-                      >
-                        {descargandoDoc === trabajo._id ? '⏳ Generando...' : '📄 Generar Documentación'}
-                      </button>
+                      {/* ── BLOQUE DE GENERACIÓN DOCUMENTAL ── */}
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginTop: '10px' }}>
+
+                        {/* BOTÓN 1: GENERAR SOLICITUD (WORD) */}
+                        <button
+                          id={`btn-word-${trabajo._id}`}
+                          onClick={() => handleGenerarDocumentacion(trabajo._id, trabajo.id_trabajo)}
+                          disabled={descargandoWord === trabajo._id || descargandoMemoria === trabajo._id}
+                          className="boton-formulario"
+                          style={{
+                            background: descargandoWord === trabajo._id
+                              ? 'linear-gradient(135deg, #6b7280 0%, #4b5563 100%)'
+                              : 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)',
+                            color: '#ffffff',
+                            padding: '9px 10px',
+                            fontSize: '12px',
+                            fontWeight: 'bold',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '6px',
+                            borderRadius: '6px',
+                            cursor: descargandoWord === trabajo._id ? 'not-allowed' : 'pointer',
+                            opacity: descargandoMemoria === trabajo._id ? 0.5 : 1,
+                            transition: 'all 0.2s ease',
+                            border: '2px solid #1d4ed8'
+                          }}
+                          title="Genera y descarga la Solicitud de Instalación en formato Word (.docx)"
+                        >
+                          {descargandoWord === trabajo._id ? '⏳ Generando Word...' : '📄 Generar Solicitud (Word)'}
+                        </button>
+
+                        {/* BOTÓN 2: GENERAR MEMORIA TÉCNICA (PDF) */}
+                        <button
+                          id={`btn-pdf-${trabajo._id}`}
+                          onClick={() => handleGenerarMemoria(trabajo._id, trabajo.id_trabajo)}
+                          disabled={descargandoMemoria === trabajo._id || descargandoWord === trabajo._id}
+                          className="boton-formulario"
+                          style={{
+                            background: descargandoMemoria === trabajo._id
+                              ? 'linear-gradient(135deg, #6b7280 0%, #4b5563 100%)'
+                              : 'linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)',
+                            color: '#ffffff',
+                            padding: '9px 10px',
+                            fontSize: '12px',
+                            fontWeight: 'bold',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '6px',
+                            borderRadius: '6px',
+                            cursor: descargandoMemoria === trabajo._id ? 'not-allowed' : 'pointer',
+                            opacity: descargandoWord === trabajo._id ? 0.5 : 1,
+                            transition: 'all 0.2s ease',
+                            border: '2px solid #b91c1c'
+                          }}
+                          title="Genera y descarga la Memoria Técnica oficial (PDF Comunidad de Madrid)"
+                        >
+                          {descargandoMemoria === trabajo._id ? '⏳ Generando PDF...' : '📑 Generar Memoria (PDF)'}
+                        </button>
+
+                      </div>
 
                       {/* ACCIONES DE OBRA (EDITAR Y ELIMINAR) */}
                       <div style={{ display: 'flex', gap: '8px', marginTop: '10px', paddingTop: '8px', borderTop: '1px solid #f1f5f9' }}>
@@ -681,26 +749,85 @@ const OfficeDashboard = () => {
               <button onClick={() => setModalObra({ abierto: false, datos: null })} className="boton-cerrar-modal">✖</button>
             </div>
 
-            {/* BOTÓN DESTACADO DENTRO DEL MODAL PARA GENERAR DOCUMENTACIÓN */}
-            <div style={{ marginBottom: '18px', background: '#eff6ff', border: '1px solid #bfdbfe', padding: '12px', borderRadius: '8px' }}>
-              <button 
+            {/* ── GENERACIÓN DOCUMENTAL OFICIAL ── */}
+            <div style={{
+              marginBottom: '18px',
+              background: 'linear-gradient(135deg, #f0f9ff 0%, #fef2f2 100%)',
+              border: '1px solid #e2e8f0',
+              padding: '14px',
+              borderRadius: '10px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '10px'
+            }}>
+              <p style={{ margin: '0 0 2px 0', fontSize: '12px', fontWeight: '700', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                📂 Generación Documental Oficial
+              </p>
+
+              {/* BOTÓN 1: SOLICITUD (WORD) */}
+              <button
+                id={`modal-btn-word-${modalObra.datos._id}`}
                 type="button"
                 onClick={() => handleGenerarDocumentacion(modalObra.datos._id, modalObra.datos.id_trabajo)}
-                disabled={descargandoDoc === modalObra.datos._id}
+                disabled={descargandoWord === modalObra.datos._id || descargandoMemoria === modalObra.datos._id}
                 className="boton-formulario"
-                style={{ 
-                  background: 'linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%)', 
+                style={{
+                  background: descargandoWord === modalObra.datos._id
+                    ? 'linear-gradient(135deg, #6b7280 0%, #4b5563 100%)'
+                    : 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)',
                   color: '#ffffff',
-                  fontSize: '15px',
+                  fontSize: '14px',
                   fontWeight: 'bold',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  gap: '8px'
+                  gap: '8px',
+                  padding: '12px',
+                  borderRadius: '8px',
+                  border: '2px solid #1d4ed8',
+                  cursor: descargandoWord === modalObra.datos._id ? 'not-allowed' : 'pointer',
+                  opacity: descargandoMemoria === modalObra.datos._id ? 0.5 : 1,
+                  transition: 'all 0.25s ease'
                 }}
+                title="Solicitud de Instalación Eléctrica en formato Word editable (.docx)"
               >
-                {descargandoDoc === modalObra.datos._id ? '⏳ Generando documento Word...' : '📄 Generar Documentación Oficial (.docx)'}
+                {descargandoWord === modalObra.datos._id
+                  ? '⏳ Generando Solicitud Word...'
+                  : '📄 Generar Solicitud (Word)'}
               </button>
+
+              {/* BOTÓN 2: MEMORIA TÉCNICA (PDF) */}
+              <button
+                id={`modal-btn-pdf-${modalObra.datos._id}`}
+                type="button"
+                onClick={() => handleGenerarMemoria(modalObra.datos._id, modalObra.datos.id_trabajo)}
+                disabled={descargandoMemoria === modalObra.datos._id || descargandoWord === modalObra.datos._id}
+                className="boton-formulario"
+                style={{
+                  background: descargandoMemoria === modalObra.datos._id
+                    ? 'linear-gradient(135deg, #6b7280 0%, #4b5563 100%)'
+                    : 'linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)',
+                  color: '#ffffff',
+                  fontSize: '14px',
+                  fontWeight: 'bold',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  padding: '12px',
+                  borderRadius: '8px',
+                  border: '2px solid #b91c1c',
+                  cursor: descargandoMemoria === modalObra.datos._id ? 'not-allowed' : 'pointer',
+                  opacity: descargandoWord === modalObra.datos._id ? 0.5 : 1,
+                  transition: 'all 0.25s ease'
+                }}
+                title="Memoria Técnica oficial en PDF sellada (formulario Comunidad de Madrid)"
+              >
+                {descargandoMemoria === modalObra.datos._id
+                  ? '⏳ Generando Memoria PDF...'
+                  : '📑 Generar Memoria (PDF)'}
+              </button>
+
             </div>
 
             <form onSubmit={handleGuardarObra}>
