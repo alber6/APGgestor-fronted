@@ -9,7 +9,8 @@ import axios from 'axios';
 // });
 const API = axios.create({
   // Fuerza localhost para desarrollo local
-  baseURL: 'http://localhost:5000/api',
+  baseURL: import.meta.env.VITE_API_URL || 'https://apggestor-backend.onrender.com/api',
+  // baseURL: 'http://localhost:5000/api',
 });
 
 // Interceptor para adjuntar automáticamente el token JWT guardado en localStorage
