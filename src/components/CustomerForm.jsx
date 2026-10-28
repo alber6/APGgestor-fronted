@@ -1,27 +1,95 @@
 import React, { useState, useEffect } from 'react';
 
 export const TIPOS_VIA = [
-  "CALLE", "ACCESO", "ACUEDUCTO", "AERODROMO", "AEROPUERTO", "ALAMEDA", "ALMACEN", 
-  "ALTO", "APARTAMENTO", "ARROYO", "AUTOVIA", "AVENIDA", "BAJADA", "BARRANCO", 
-  "BARRIADA", "BARRIO", "BASILICA", "BLOQUE", "BULEVAR", "CALLEJA", "CALLEJON", 
-  "CAMINO", "CAMPAMENTO", "CANAL", "CANTON", "CAÑADA", "CARRERA", "CARRETERA", 
-  "CARRIL", "CERRO", "COLONIA", "COSTANILLA", "CUESTA", "DEHESA", "FINCA", 
-  "GLORIETA", "GRAN VIA", "PARAJE", "PARCELA", "PARQUE", "PASADIZO", "PASAJE", 
-  "PASEO", "PLAZA", "PLAZUELA", "POBLADO", "POLIGONO", "RINCON", "RINCONADA", 
+  "CALLE", "ACCESO", "ACUEDUCTO", "AERODROMO", "AEROPUERTO", "ALAMEDA", "ALMACEN",
+  "ALTO", "APARTAMENTO", "ARROYO", "AUTOVIA", "AVENIDA", "BAJADA", "BARRANCO",
+  "BARRIADA", "BARRIO", "BASILICA", "BLOQUE", "BULEVAR", "CALLEJA", "CALLEJON",
+  "CAMINO", "CAMPAMENTO", "CANAL", "CANTON", "CAÑADA", "CARRERA", "CARRETERA",
+  "CARRIL", "CERRO", "COLONIA", "COSTANILLA", "CUESTA", "DEHESA", "FINCA",
+  "GLORIETA", "GRAN VIA", "PARAJE", "PARCELA", "PARQUE", "PASADIZO", "PASAJE",
+  "PASEO", "PLAZA", "PLAZUELA", "POBLADO", "POLIGONO", "RINCON", "RINCONADA",
   "RONDA", "ROTONDA", "SECTOR", "SENDA", "TRASERA", "TRAVESIA", "URBANIZACION", "VEREDA"
 ];
 
 export const TIPOS_VIVIENDA = [
-  "Piso",
-  "Chalet/Casa",
-  "Local",
-  "Oficina",
-  "Nave Industrial",
-  "Restaurante/Hostelería",
-  "Colegio/Educación",
-  "Garaje",
-  "Comunidad de Propietarios",
-  "Otros"
+  "AUTOCONSUMO",
+  "LOCALES HÚMEDOS",
+  "LOCALES POLVORIENTOS",
+  "LOCALES CON RIESGO DE CORROSIÓN",
+  "BOMBAS DE EXTRACCIÓN O ELEVACIÓN DE AGUA",
+  "LOCAL MOJADO",
+  "GENERACION SOLAR FOTOVOLTAICA",
+  "GENERACION SOLAR TERMOELÉCTRICA",
+  "AEROGENERADORES",
+  "GENERACION GRUPOS ELECTRÓGENOS FIJOS",
+  "GRUPOS ELECTRÓGENOS PORTÁTILES",
+  "COGENERACIÓN",
+  "CONVERTIDORES",
+  "CONDUCTORES AISLADOS PARA CALDEO",
+  "TEMP. ALIMENTA MAQUINA OBRAS CONSTRUCCIÓN",
+  "TEMP. EN LOCALES O EMPLAZAMIENTOS ABIERTOS",
+  "VIVIENDA",
+  "LOCAL/OFICINA (NO LPC)",
+  "INSTALACIONES DE ENLACE",
+  "INSTALACIONES COMUNES",
+  "GARAJE VENTILACIÓN FORZADA",
+  "GARAJE VENTILACIÓN NATURAL",
+  "LPC - CINES",
+  "LPC- TEATROS",
+  "LPC- AUDITORIOS",
+  "LPC- PLAZAS DE TOROS",
+  "LPC- HIPÓDROMOS",
+  "LPC- PARQUES DE ATRACCIONES",
+  "LPC- SALAS DE FIESTA",
+  "LPC- DISCOTECAS",
+  "LPC- SALAS DE JUEGOS DE AZAR",
+  "LPC- ESTADIOS Y PABELLONES DEPORTIVOS",
+  "LPC- CANODROMOS",
+  "LPC- PARQUES ACUATICOS",
+  "LPC- FERIAS FIJAS",
+  "LPC- BINGOS",
+  "LPC- CIRCOS",
+  "LPC- OTROS",
+  "LPC- TEMPLOS",
+  "LPC- MUSEOS",
+  "LPC- SALAS DE CONFERENCIAS Y CONGRESOS",
+  "LPC- CASINOS",
+  "LPC- HOTELES",
+  "LPC- HOSTALES",
+  "LPC- BARES, RESTAURANTES O SIMILARES",
+  "LPC- ASILOS",
+  "LPC- GUARDERÍAS",
+  "LPC- HOSPITALES, CLÍNICAS, AMBUL., CENTROS SALUD",
+  "LPC- ESTACIONES DE VIAJEROS",
+  "LPC- ESTACIONAMIENTOS SUBTERRÁNEOS",
+  "LPC- ESTABLECIMIENTOS COMERCIALES",
+  "LPC- AGRUP. ESTAB. EN CENTROS COMERCIALES",
+  "LPC- AEROPUERTOS",
+  "LPC- BIBLIOTECAS",
+  "LPC- CLUBES SOCIALES Y DEPORTIVOS",
+  "LPC- CENTROS DE ENSEÑANZA",
+  "LPC- CONSULTORIOS MÉDICOS",
+  "LPC- OFICINAS CON PRESENCIA DE PÚBLICO",
+  "LPC- RESIDENCIAS DE ESTUDIANTES",
+  "LPC- GIMNASIOS",
+  "LPC- SALAS DE EXPOSICIONES",
+  "LPC- CENTROS CULTURALES",
+  "LPC-OTROS LOCALES BD2/BD3/BD4",
+  "LPC- OTROS (OCUPACIÓN > 100)",
+  "MÁQUINAS DE ELEVACIÓN Y TRANSPORTE",
+  "INSTALACIONES QUE UTILICEN TENSIONES ESPECIALES",
+  "DESTINADAS A RÓTULOS LUMINOSOS",
+  "CERCAS ELÉCTRICAS",
+  "ALUMBRADO EXTERIOR PÚBLICO",
+  "ALUMBRADO EXTERIOR PRIVADO",
+  "MOBILIARIO URBANO",
+  "LOCAL CON RIESGO INCENDIO O EXPLOSIÓN, NO GARAJE",
+  "QUIROFANOS Y SALAS DE INTERVENCION",
+  "PISCINAS",
+  "FUENTES",
+  "INFRAESTRUCTURA DE RECARGA VEHICULO ELECTRICO",
+  "INDUSTRIAS Y OTROS ESTABLECIMIENTOS INDUSTRIALES",
+  "OTRAS NO CONTEMPLADAS"
 ];
 
 const CustomerForm = ({ initialData, onSubmit, cargandoId = false, buttonText = "Guardar Cliente" }) => {
@@ -99,16 +167,16 @@ const CustomerForm = ({ initialData, onSubmit, cargandoId = false, buttonText = 
 
   return (
     <form onSubmit={handleSubmit} className="tarjeta-formulario-blanca">
-      
+
       {formData.id_cliente && (
         <div className="campo-formulario">
           <label>ID Cliente (Asignado Automáticamente):</label>
-          <input 
-            type="number" 
-            name="id_cliente" 
-            value={formData.id_cliente} 
-            onChange={handleChange} 
-            disabled={true} 
+          <input
+            type="number"
+            name="id_cliente"
+            value={formData.id_cliente}
+            onChange={handleChange}
+            disabled={true}
             placeholder={cargandoId ? "Calculando siguiente ID..." : ""}
           />
           <small className="texto-ayuda-formulario">
@@ -120,10 +188,10 @@ const CustomerForm = ({ initialData, onSubmit, cargandoId = false, buttonText = 
       {/* CHECKBOX EMPRESA / PERSONA JURÍDICA */}
       <div className="campo-formulario" style={{ background: '#f8fafc', padding: '14px', borderRadius: '8px', border: '1px solid #cbd5e1', marginBottom: '16px' }}>
         <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', fontWeight: 'bold', margin: 0 }}>
-          <input 
-            type="checkbox" 
-            name="es_empresa" 
-            checked={formData.es_empresa} 
+          <input
+            type="checkbox"
+            name="es_empresa"
+            checked={formData.es_empresa}
             onChange={handleChange}
             style={{ width: '20px', height: '20px', cursor: 'pointer' }}
           />
@@ -138,40 +206,40 @@ const CustomerForm = ({ initialData, onSubmit, cargandoId = false, buttonText = 
       {formData.es_empresa && (
         <div style={{ background: '#f0f9ff', padding: '16px', borderRadius: '8px', border: '1px solid #bae6fd', marginBottom: '20px' }}>
           <h4 style={{ color: '#0369a1', margin: '0 0 12px 0' }}>👤 Datos del Representante Legal</h4>
-          
+
           <div className="campo-formulario">
             <label>Nombre del Representante:</label>
-            <input 
-              type="text" 
-              name="representante_nombre" 
-              value={formData.representante_nombre} 
-              onChange={handleChange} 
+            <input
+              type="text"
+              name="representante_nombre"
+              value={formData.representante_nombre}
+              onChange={handleChange}
               required={formData.es_empresa}
-              placeholder="Ej: Manuel" 
+              placeholder="Ej: Manuel"
             />
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
             <div className="campo-formulario">
               <label>Primer Apellido:</label>
-              <input 
-                type="text" 
-                name="representante_apellido1" 
-                value={formData.representante_apellido1} 
-                onChange={handleChange} 
+              <input
+                type="text"
+                name="representante_apellido1"
+                value={formData.representante_apellido1}
+                onChange={handleChange}
                 required={formData.es_empresa}
-                placeholder="Ej: García" 
+                placeholder="Ej: García"
               />
             </div>
 
             <div className="campo-formulario">
               <label>Segundo Apellido:</label>
-              <input 
-                type="text" 
-                name="representante_apellido2" 
-                value={formData.representante_apellido2} 
-                onChange={handleChange} 
-                placeholder="Ej: López" 
+              <input
+                type="text"
+                name="representante_apellido2"
+                value={formData.representante_apellido2}
+                onChange={handleChange}
+                placeholder="Ej: López"
               />
             </div>
           </div>
@@ -179,31 +247,31 @@ const CustomerForm = ({ initialData, onSubmit, cargandoId = false, buttonText = 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
             <div className="campo-formulario">
               <label>NIF / DNI del Representante:</label>
-              <input 
-                type="text" 
-                name="representante_nif" 
-                value={formData.representante_nif} 
-                onChange={handleChange} 
+              <input
+                type="text"
+                name="representante_nif"
+                value={formData.representante_nif}
+                onChange={handleChange}
                 required={formData.es_empresa}
-                placeholder="Ej: 87654321X" 
+                placeholder="Ej: 87654321X"
               />
             </div>
 
             <div className="campo-formulario">
               <label>Correo Electrónico (Representante):</label>
-              <input 
-                type="email" 
-                name="rep_correo" 
-                value={formData.rep_correo} 
-                onChange={handleChange} 
-                placeholder="Ej: representante@empresa.com" 
+              <input
+                type="email"
+                name="rep_correo"
+                value={formData.rep_correo}
+                onChange={handleChange}
+                placeholder="Ej: representante@empresa.com"
               />
             </div>
           </div>
 
           {/* DIRECCIÓN DE NOTIFICACIÓN DEL REPRESENTANTE */}
           <h5 style={{ color: '#0284c7', margin: '14px 0 8px 0' }}>📍 Domicilio del Representante</h5>
-          
+
           {/* Fila 1: Tipo de Vía (30%) + Nombre de la Vía (70%) */}
           <div style={{ display: 'grid', gridTemplateColumns: '3fr 7fr', gap: '10px' }}>
             <div className="campo-formulario">
@@ -217,12 +285,12 @@ const CustomerForm = ({ initialData, onSubmit, cargandoId = false, buttonText = 
 
             <div className="campo-formulario">
               <label>Nombre de la Vía:</label>
-              <input 
-                type="text" 
-                name="rep_nombre_via" 
-                value={formData.rep_nombre_via} 
-                onChange={handleChange} 
-                placeholder="Ej: Gran Vía" 
+              <input
+                type="text"
+                name="rep_nombre_via"
+                value={formData.rep_nombre_via}
+                onChange={handleChange}
+                placeholder="Ej: Gran Vía"
               />
             </div>
           </div>
@@ -289,37 +357,37 @@ const CustomerForm = ({ initialData, onSubmit, cargandoId = false, buttonText = 
 
       <div className="campo-formulario">
         <label>NIF / CIF Titular (Requerido):</label>
-        <input 
-          type="text" 
-          name="nif" 
-          value={formData.nif} 
-          onChange={handleChange} 
-          required 
-          placeholder="Ej: B12345678 o 12345678Z" 
+        <input
+          type="text"
+          name="nif"
+          value={formData.nif}
+          onChange={handleChange}
+          required
+          placeholder="Ej: B12345678 o 12345678Z"
         />
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
         <div className="campo-formulario">
           <label>Nombre / Razón Social (Requerido):</label>
-          <input 
-            type="text" 
-            name="nombre" 
-            value={formData.nombre} 
-            onChange={handleChange} 
-            required 
-            placeholder="Ej: Juan o Constructora del Norte S.L." 
+          <input
+            type="text"
+            name="nombre"
+            value={formData.nombre}
+            onChange={handleChange}
+            required
+            placeholder="Ej: Juan o Constructora del Norte S.L."
           />
         </div>
 
         <div className="campo-formulario">
           <label>Ref. Obra / Cliente (Nombre Referencia):</label>
-          <input 
-            type="text" 
-            name="nombre_referencia" 
-            value={formData.nombre_referencia} 
-            onChange={handleChange} 
-            placeholder="Ej: Reforma Local Centro, Casa Campo..." 
+          <input
+            type="text"
+            name="nombre_referencia"
+            value={formData.nombre_referencia}
+            onChange={handleChange}
+            placeholder="Ej: Reforma Local Centro, Casa Campo..."
           />
         </div>
       </div>
@@ -327,23 +395,23 @@ const CustomerForm = ({ initialData, onSubmit, cargandoId = false, buttonText = 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
         <div className="campo-formulario">
           <label>Primer Apellido (Titular):</label>
-          <input 
-            type="text" 
-            name="apellido1" 
-            value={formData.apellido1} 
-            onChange={handleChange} 
-            placeholder="Ej: Pérez" 
+          <input
+            type="text"
+            name="apellido1"
+            value={formData.apellido1}
+            onChange={handleChange}
+            placeholder="Ej: Pérez"
           />
         </div>
 
         <div className="campo-formulario">
           <label>Segundo Apellido (Titular):</label>
-          <input 
-            type="text" 
-            name="apellido2" 
-            value={formData.apellido2} 
-            onChange={handleChange} 
-            placeholder="Ej: Gómez" 
+          <input
+            type="text"
+            name="apellido2"
+            value={formData.apellido2}
+            onChange={handleChange}
+            placeholder="Ej: Gómez"
           />
         </div>
       </div>
@@ -351,23 +419,23 @@ const CustomerForm = ({ initialData, onSubmit, cargandoId = false, buttonText = 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
         <div className="campo-formulario">
           <label>Teléfono de Contacto:</label>
-          <input 
-            type="tel" 
-            name="telefono" 
-            value={formData.telefono} 
-            onChange={handleChange} 
-            placeholder="Ej: 600123456" 
+          <input
+            type="tel"
+            name="telefono"
+            value={formData.telefono}
+            onChange={handleChange}
+            placeholder="Ej: 600123456"
           />
         </div>
 
         <div className="campo-formulario">
           <label>Correo Electrónico:</label>
-          <input 
-            type="email" 
-            name="email" 
-            value={formData.email} 
-            onChange={handleChange} 
-            placeholder="Ej: contacto@cliente.com" 
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            placeholder="Ej: contacto@cliente.com"
           />
         </div>
       </div>
@@ -388,12 +456,12 @@ const CustomerForm = ({ initialData, onSubmit, cargandoId = false, buttonText = 
 
         <div className="campo-formulario">
           <label>Nombre de la Vía:</label>
-          <input 
-            type="text" 
-            name="nombre_via" 
-            value={formData.nombre_via} 
-            onChange={handleChange} 
-            placeholder="Ej: Gran Vía" 
+          <input
+            type="text"
+            name="nombre_via"
+            value={formData.nombre_via}
+            onChange={handleChange}
+            placeholder="Ej: Gran Vía"
           />
         </div>
       </div>
@@ -444,10 +512,10 @@ const CustomerForm = ({ initialData, onSubmit, cargandoId = false, buttonText = 
 
       <div className="campo-formulario" style={{ marginTop: '12px' }}>
         <label>Tipo de vivienda/local:</label>
-        <select 
-          name="tipo_vivienda" 
-          value={formData.tipo_vivienda} 
-          onChange={handleChange} 
+        <select
+          name="tipo_vivienda"
+          value={formData.tipo_vivienda}
+          onChange={handleChange}
         >
           {TIPOS_VIVIENDA.map(t => (
             <option key={t} value={t}>{t}</option>
