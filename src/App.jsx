@@ -19,6 +19,7 @@ function App() {
         <h2 className="logo-empresa">⚡ APGgestor</h2>
         <nav className="menu-navegacion">
           <a href="/" className="enlace-menu">🖥️ Panel Principal</a>
+          <a href="/control-horario" className="enlace-menu">⏰ Control Horario</a>
           <a href="/clientes" className="enlace-menu">🙍 Clientes</a>
           <a href="/nuevo-cliente" className="enlace-menu">✍️ Nuevo Cliente</a>
           <a href="/nuevo-trabajo" className="enlace-menu">🛠️ Nueva obra</a>

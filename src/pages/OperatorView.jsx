@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getJobs, updateJobStatus, addMaterialAlert } from '../services/api'; 
+import TimeTrackerOperator from '../components/TimeTrackerOperator';
 
 const OperatorView = () => {
   const [trabajos, setTrabajos] = useState([]);
@@ -162,6 +163,9 @@ const OperatorView = () => {
           {mensajeOperacion.texto}
         </div>
       )}
+
+      {/* MÓDULO DE REGISTRO HORARIO INTRATIME (RD-ley 8/2019) */}
+      <TimeTrackerOperator />
 
       {/* LISTADO DE OBRAS ASIGNADAS */}
       <div className="contenedor-listado-obras">

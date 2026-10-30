@@ -15,6 +15,7 @@ import OperatorView from './pages/OperatorView.jsx'
 import Login from './pages/Login.jsx'
 import CustomersList from './pages/CustomerList.jsx'
 import NewJob from './pages/NewJob.jsx'
+import TimeTrackingAdmin from './pages/TimeTrackingAdmin.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -29,6 +30,7 @@ createRoot(document.getElementById('root')).render(
           <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
             <Route path='/' element={<App />}>
               <Route index element={<OfficeDashboard />} />
+              <Route path='/control-horario' element={<TimeTrackingAdmin />} />
               <Route path='/clientes' element={<CustomersList />} />
               <Route path='/nuevo-cliente' element={<NewCustomer />} />
               <Route path='/nuevo-trabajo' element={<NewJob />} />

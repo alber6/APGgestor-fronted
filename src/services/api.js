@@ -7,10 +7,20 @@ import axios from 'axios';
 //   baseURL: 'http://localhost:5000/api',
 
 // });
+const getBaseURL = () => {
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL;
+  }
+  // En entorno local (localhost), conectar al backend local de Node en el puerto 5000
+  if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+    return 'http://localhost:5000/api';
+  }
+  // En producción (Render/Vercel)
+  return 'https://apggestor-backend.onrender.com/api';
+};
+
 const API = axios.create({
-  // Fuerza localhost para desarrollo local
-  baseURL: import.meta.env.VITE_API_URL || 'https://apggestor-backend.onrender.com/api',
-  // baseURL: 'http://localhost:5000/api',
+  baseURL: getBaseURL(),
 });
 
 // Interceptor para adjuntar automáticamente el token JWT guardado en localStorage
@@ -66,6 +76,27 @@ export const getOperators = () => getUsers('operario');
 export const createOperator = (operatorData) => createUser({ ...operatorData, rol: 'operario' });
 export const updateOperator = (id, operatorData) => updateUser(id, operatorData);
 export const deleteOperator = (id) => deleteUser(id);
+
+// ----------------------------------------------------
+// ⏰ CONTROL HORARIO / REGISTRO DE JORNADA (RD-ley 8/2019)
+// ----------------------------------------------------
+export const punchTimeRecord = (punchData) => API.post('/time-records', punchData);
+export const getCurrentTimeState = () => API.get('/time-records/estado-actual');
+export const getMyTimeRecords = (params) => API.get('/time-records/mis-registros', { params });
+export const getAllTimeRecords = (params) => API.get('/time-records', { params });
+export const createManualTimeRecord = (recordData) => API.post('/time-records/manual', recordData);
+export const updateTimeRecord = (id, updateData) => API.put(`/time-records/${id}`, updateData);
+export const exportTimeRecordsCSV = (params) => API.get('/time-records/export/csv', { params, responseType: 'blob' });
+export const exportTimeRecordsPDF = (params) => API.get('/time-records/export/pdf', { params, responseType: 'blob' });
+
+// ----------------------------------------------------
+// 🏖️ GESTIÓN DE VACACIONES Y PERMISOS
+// ----------------------------------------------------
+export const createLeaveRequest = (data) => API.post('/leave-requests', data);
+export const getMyLeaveRequests = () => API.get('/leave-requests/mis-solicitudes');
+export const cancelLeaveRequest = (id) => API.delete(`/leave-requests/${id}`);
+export const getAllLeaveRequests = (params) => API.get('/leave-requests', { params });
+export const updateLeaveRequestStatus = (id, data) => API.patch(`/leave-requests/${id}/estado`, data);
 
 export default API;
 
