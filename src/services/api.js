@@ -8,14 +8,17 @@ import axios from 'axios';
 
 // });
 const getBaseURL = () => {
+  // 1. Si hay variable de entorno definida (ej: en Vercel/Render)
   if (import.meta.env.VITE_API_URL) {
     return import.meta.env.VITE_API_URL;
   }
-  // En entorno local (localhost), conectar al backend local de Node en el puerto 5000
+
+  // 2. Si estás abriendo la web desde tu ordenador en desarrollo
   if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
     return 'http://localhost:5000/api';
   }
-  // En producción (Render/Vercel)
+
+  // 3. Producción por defecto
   return 'https://apggestor-backend.onrender.com/api';
 };
 
